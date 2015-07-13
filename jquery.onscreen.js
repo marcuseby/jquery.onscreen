@@ -15,7 +15,7 @@
  *          console.log("The element is on the screen!");
  *      }, function() {
  *          console.log("The element is no longer on the screen. :(")
- *      }, 100, 1); // add delay or negative for early, and final number, means how many times it should trigger.
+ *      },100,1); // add delay or negative for early, and final number, means how many times it should trigger.
  *     
  */
  
@@ -26,8 +26,10 @@
 				var _offset = offset_modifier || 0;                
 				var prev_state = -1;
 				var that = $(this);
-				var tr = that.data('timesrun');
-				that.data('timesrun',((tr>0)?tr:0));
+				var tr = timesrun || false;
+				if (tr!==false) {
+					that.data('timesrun',((that.data('timesrun')>0)?that.data('timesrun'):0));
+				}
 				$(window).scroll(function() {
 					// Define edges of our viewport
 					var borders = {
@@ -50,10 +52,11 @@
 					
 					// Yes it did!
 					if (state) { 
-						if (that.data('timesrun')==timesrun) {
+						if (that.data('timesrun')==timesrun && tr!==false) {
 							return;
+						} else if (tr!==false) {
+							that.data('timesrun',that.data('timesrun')+1);
 						}
-						that.data('timesrun',that.data('timesrun')+1);
 						fn_on.call(); 
 					} 
 					else {
